@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://slientpandda.github.io</id>
     <title>SilentPanda&apos;s Blog</title>
-    <updated>2021-03-15T11:03:13.590Z</updated>
+    <updated>2021-03-27T11:09:40.903Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://slientpandda.github.io"/>
     <link rel="self" href="https://slientpandda.github.io/atom.xml"/>
@@ -10,6 +10,17 @@
     <logo>https://slientpandda.github.io/images/avatar.png</logo>
     <icon>https://slientpandda.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, SilentPanda&apos;s Blog</rights>
+    <entry>
+        <title type="html"><![CDATA[一些聊以告慰的话]]></title>
+        <id>https://slientpandda.github.io/post/yi-xie-liao-yi-gao-wei-de-hua/</id>
+        <link href="https://slientpandda.github.io/post/yi-xie-liao-yi-gao-wei-de-hua/">
+        </link>
+        <updated>2021-03-27T10:55:41.000Z</updated>
+        <content type="html"><![CDATA[<p>希望自己烦扰的时候能回头看看这篇小文。<br>
+又是个复试月，身边的朋友同学都有些好消息，对我来说这是第二次了，很遗憾我也变成了掉队的那一个，哈哈。less is more，不清楚这段日子于我来说是福是祸，不过彷佛在无形之中，也让我明白在阳光灿烂的日子里，也要夹着尾巴，谨慎地脚踏实地做人，不过万一明天是阴雨天，也要裹紧领口去接受他。<br>
+人生短暂，如白驹过隙，转瞬即逝。可这种心情很长，如高山大川，绵延不绝。当如热爱生命般热爱生活。我在我自己的路上，我是我自己的路。</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[春招进展]]></title>
         <id>https://slientpandda.github.io/post/chun-zhao-jin-zhan/</id>
