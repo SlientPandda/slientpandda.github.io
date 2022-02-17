@@ -1,0 +1,253 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>配置SVN服务器 | SilentPanda&#39;s Blog</title>
+<link rel="shortcut icon" href="https://slientpandda.github.io/favicon.ico?v=1645063736332">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://slientpandda.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="配置SVN服务器 | SilentPanda&#39;s Blog - Atom Feed" href="https://slientpandda.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="SVN配置说明
+创建版本库，如dev
+cd /usr/svn
+svnadmin create dev
+
+修改版本库配置
+进入conf目录，查看需要修改的配置文件
+cd /usr/svn/dev/conf
+
+配置文件：
+
+authz：权限配置..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://slientpandda.github.io">
+  <img class="avatar" src="https://slientpandda.github.io/images/avatar.png?v=1645063736332" alt="">
+  </a>
+  <h1 class="site-title">
+    SilentPanda&#39;s Blog
+  </h1>
+  <p class="site-description">
+    越过山丘
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              配置SVN服务器
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-02-17
+              </span>
+              <span>
+                3 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <h2 id="svn配置说明">SVN配置说明</h2>
+<h3 id="创建版本库如dev">创建版本库，如dev</h3>
+<pre><code>cd /usr/svn
+svnadmin create dev
+</code></pre>
+<h3 id="修改版本库配置">修改版本库配置</h3>
+<p>进入conf目录，查看需要修改的配置文件</p>
+<pre><code>cd /usr/svn/dev/conf
+</code></pre>
+<p>配置文件：</p>
+<ul>
+<li>authz：权限配置文件，控制读写权限</li>
+<li>passwd：账号密码配置文件</li>
+<li>svnserve.conf：svn服务器配置文件</li>
+</ul>
+<h3 id="修改svnserveconf文件">修改svnserve.conf文件</h3>
+<p>去掉anon-access、auth-access、password-db、authz-db、realm几项前的注释符号“#”。</p>
+<p>注意：需要严格去掉配置项前的空格，并且等号左右都要留一个空格。</p>
+<p>配置项含义：</p>
+<ul>
+<li>anon-access = none|read|write 决定非授权用户的访问级别。none 表示无访问权限，read 表示只读，write 表示可读可写，默认为 read。</li>
+<li>auth-access = none|read|write 决定授权用户的访问级别，使用与上面相同的访问级别。默认为 write。</li>
+<li>password-db = filename 指定账号密码数据库文件名。filename 是相对仓库中 conf 目录的位置，也可以设置为绝对路径，默认为passwd。</li>
+<li>authz-db = filename 指定权限配置文件名，filename 是相对仓库中 conf 目录的位置，也可以设置为绝对路径，默认为authz。</li>
+<li>realm = realm-name 指定版本库的认证域，即在登录时提示的认证域名称。若两个版本库的认证域相同，建议使用相同的账号密码数据库文件passwd。</li>
+</ul>
+<h4 id="修改passwd文件">修改passwd文件</h4>
+<p>只需在末尾添加账号和密码，格式 <code>账号 = 密码</code>，如<code>user1 = 123456</code>，可添加多个。</p>
+<h3 id="修改authz文件">修改authz文件</h3>
+<p>在根目录下设置user1、user2读写权限：</p>
+<pre><code>[/]
+user1 = rw
+user2 = rw
+</code></pre>
+<p>用户比较多时，可以使用groups设置分组，并且在根目录下设置分组权限</p>
+<pre><code>[groups]
+team1 = user1,user2
+[/]
+@team1 = rw
+</code></pre>
+<p>添加新用户时应先修改passwd文件添加用户，然后再修改authz文件添加新用户的权限配置。</p>
+<h3 id="启动svn服务">启动svn服务</h3>
+<p>执行SVN启动命令，其中参数<code>-d</code>表示以守护进程的方式启动， <code>-r</code>表示设置的根目录。</p>
+<pre><code>svnserve -d -r /usr/svn/
+</code></pre>
+<p>关闭svn命令：</p>
+<pre><code class="language-ebnf">killall svnserve
+</code></pre>
+<h3 id="本地访问svn服务">本地访问svn服务</h3>
+<p>URL填写<code>svn://IP/dev</code>，dev替换成你创建的版本库名称。</p>
+<hr>
+<h3 id="http访问svn添加用户">http访问svn添加用户</h3>
+<pre><code class="language-ruby">htpasswd -c -m /usr/svn/EBG_Files/conf/httpdPasswd mubingcheng
+</code></pre>
+<p>-c 是创建新文件，只有第一次创建账户密码时使用</p>
+<p>-m 是强制使用MD5加密密码(默认)</p>
+<p><em><strong>@author wuhao51</strong></em></p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#svn%E9%85%8D%E7%BD%AE%E8%AF%B4%E6%98%8E">SVN配置说明</a>
+<ul>
+<li><a href="#%E5%88%9B%E5%BB%BA%E7%89%88%E6%9C%AC%E5%BA%93%E5%A6%82dev">创建版本库，如dev</a></li>
+<li><a href="#%E4%BF%AE%E6%94%B9%E7%89%88%E6%9C%AC%E5%BA%93%E9%85%8D%E7%BD%AE">修改版本库配置</a></li>
+<li><a href="#%E4%BF%AE%E6%94%B9svnserveconf%E6%96%87%E4%BB%B6">修改svnserve.conf文件</a>
+<ul>
+<li><a href="#%E4%BF%AE%E6%94%B9passwd%E6%96%87%E4%BB%B6">修改passwd文件</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BF%AE%E6%94%B9authz%E6%96%87%E4%BB%B6">修改authz文件</a></li>
+<li><a href="#%E5%90%AF%E5%8A%A8svn%E6%9C%8D%E5%8A%A1">启动svn服务</a></li>
+<li><a href="#%E6%9C%AC%E5%9C%B0%E8%AE%BF%E9%97%AEsvn%E6%9C%8D%E5%8A%A1">本地访问svn服务</a></li>
+<li><a href="#http%E8%AE%BF%E9%97%AEsvn%E6%B7%BB%E5%8A%A0%E7%94%A8%E6%88%B7">http访问svn添加用户</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://slientpandda.github.io/post/yi-xie-liao-yi-gao-wei-de-hua/">
+              <h3 class="post-title">
+                一些聊以告慰的话
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  <a href="https://beian.miit.gov.cn/" target="_blank">京ICP备19040497号</a>
+  <a class="rss" href="https://slientpandda.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>
